@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import styles from './pagamento.module.scss'
 
@@ -10,6 +10,31 @@ import TelaQrCode from '@/components/TelaQrCode'
 import TelaFormCartao from '@/components/TelaFormCartao'
 
 export default function Pagamento(){
+
+    const [dataVencimento, setDataVencimento] = useState(null);
+
+    useEffect(() => {
+        // Calcula a data de vencimento apenas na primeira renderização
+        if (!dataVencimento) {
+            const data = new Date();
+            const ano = data.getFullYear();
+            const mes = (data.getMonth() + 1).toString().padStart(2, '0'); // Adiciona zero à esquerda se for menor que 10
+            const dia = data.getDate().toString().padStart(2, '0'); // Adiciona zero à esquerda se for menor que 10
+
+            let horaAtual = data.getHours();
+            const minutosAtual = data.getMinutes();
+
+            // Adiciona uma hora ao horário atual
+            horaAtual = horaAtual + 1;
+            const horarioVencimento = `${horaAtual}:${minutosAtual.toString().padStart(2, '0')}`;
+
+            // Formata a data de vencimento
+            const dataFormatada = `${dia}/${mes}/${ano} - ${horarioVencimento}`;
+
+            // Define a data de vencimento no estado
+            setDataVencimento(dataFormatada);
+        }
+    }, [dataVencimento]);
 
     const [estiloProgresso, setEstiloProgresso] = useState('')
     const [progressoCompleto, setProgressoCompleto] = useState('')
@@ -29,7 +54,7 @@ export default function Pagamento(){
 
             <section className={styles.informacoesPagamento}>
                 <span>Prazo de pagamento:</span>
-                <p>15/12/2021 - 08:17</p>
+                <p>{dataVencimento}</p>
 
                 <div className={styles.containerProgresso}>
                     <div className={`${styles['circulo1']} ${styles['ativo']} ${styles[`${progressoCompleto}`]}`}></div>

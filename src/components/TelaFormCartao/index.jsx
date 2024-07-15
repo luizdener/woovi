@@ -67,7 +67,7 @@ export default function TelaFormCartao(){
                     </div>
                     <div className={styles.inputContainer}>
                         <label htmlFor="cvv">CVV</label>
-                        <input type="number" id='cvv' name='cvv' required/>
+                        <input type="text" id='cvv' name='cvv' maxLength='3' required/>
                     </div>
                 </section>
 
