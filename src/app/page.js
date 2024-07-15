@@ -1,95 +1,82 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client'
+import { useRouter } from 'next/navigation'
+
+import Botao from "@/components/BotaoContinuar";
+import styles from "./page.module.scss";
+
+import CardOpcao from "@/components/CardOpcao";
 
 export default function Home() {
+
+  const pagamentos = [
+    {
+      parcela: 1,
+      valorParcela: 30500.00,
+      cashback: 3,
+    },
+    {
+      parcela: 2,
+      valorParcela: 15300.00,
+      total: 30600.00
+    },
+    {
+      parcela: 3,
+      valorParcela: 10196.66,
+      total: 30620.00
+    },
+    {
+      parcela: 4,
+      valorParcela: 7725.00,
+      total: 30900.00,
+      juros: 3
+    },
+    {
+      parcela: 5,
+      valorParcela: 6300.00,
+      total: 31500
+    },
+    {
+      parcela: 6,
+      valorParcela: 5283.33,
+      total: 31699.98
+    },
+    {
+      parcela: 7,
+      valorParcela: 4542.85,
+      total: 31800
+    }
+  ]
+  const router = useRouter()
+
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    router.push('/pagamento')
+  }
+
   return (
     <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+      <h1>João, como você quer pagar?</h1>
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+      <form onSubmit={handleSubmit}>
+        <div className={styles.bolhaPix}>Pix</div>
+        <div className={styles.bolhaPixParcelado}>Pix Parcelado</div>
 
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
+        {pagamentos.map((pagamento, index) => (
+          pagamento.parcela === 1 && (
+            <CardOpcao className={styles.primeiraOpcao} key={index} parcela={pagamento.parcela} valorParcela={pagamento.valorParcela} cashback={pagamento.cashback} defaultChecked={true}/>
+          )
+        ))}
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
+        <section className={styles.secaoParcelas}>
+          {pagamentos.map((pagamento, index) => (
+            pagamento.parcela >= 2 && (
+              <CardOpcao key={index} parcela={pagamento.parcela} valorParcela={pagamento.valorParcela} total={pagamento.total} juros={pagamento.juros}/>
+            )
+          ))}
+        </section>
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+        <Botao tipo={'submit'}>Pagar</Botao>
+      </form>
     </main>
   );
 }
